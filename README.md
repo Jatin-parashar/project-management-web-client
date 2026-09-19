@@ -41,6 +41,19 @@ npm run preview    # preview the production build locally
 | -------------- | ----------------------------------------------------------- |
 | `VITE_API_URL` | Base URL of the backend API, including its `/api/v1` prefix |
 
+## Deployment
+
+Deployed via [Vercel](https://vercel.com) (Hobby plan — free, no card required). Vercel builds and deploys directly from GitHub on every push to `develop` (native Git integration — GitHub Actions is CI-only here, not the deploy mechanism). `vercel.json` in the repo root adds the SPA rewrite rule (`/(.*) → /index.html`) Vercel needs so a deep link or refresh on a client-side route like `/workspaces/abc123` doesn't 404.
+
+**Vercel setup (one-time, via their dashboard):**
+
+1. Create a free account, "Add New Project", import this GitHub repo.
+2. Framework preset: Vite (auto-detected).
+3. Production branch: change from `main` to `develop` in Project Settings → Git (this repo deploys off `develop`; `main` is unused).
+4. Set the environment variable in the Vercel dashboard: `VITE_API_URL` = the Northflank backend's public URL + `/api/v1` (e.g. `https://your-service.northflank.app/api/v1`). Set it for the Production environment; redeploy after setting it since Vite bakes `VITE_*` vars in at build time, not runtime.
+
+**Branch protection** (manual, no `gh` CLI needed): GitHub repo → Settings → Branches → Add branch protection rule → branch name pattern `develop` → enable "Require status checks to pass before merging" → search for and select `build` (this repo's CI job name) → Save. This makes CI a real gate: a PR can't merge into `develop` (and therefore can't trigger a Vercel deploy) while format/lint/build are failing.
+
 ## Auth model
 
 - Access token lives **in the Redux store's in-memory state only** (`features/auth/auth-slice.ts`), never in `localStorage`/`sessionStorage` — this keeps it out of reach of an XSS payload reading disk-backed storage.
