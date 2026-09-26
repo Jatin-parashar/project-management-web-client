@@ -50,7 +50,7 @@ Deployed via [Vercel](https://vercel.com) (Hobby plan — free, no card required
 1. Create a free account, "Add New Project", import this GitHub repo.
 2. Framework preset: Vite (auto-detected).
 3. Production branch: change from `main` to `develop` in Project Settings → Git (this repo deploys off `develop`; `main` is unused).
-4. Set the environment variable in the Vercel dashboard: `VITE_API_URL` = the Northflank backend's public URL + `/api/v1` (e.g. `https://your-service.northflank.app/api/v1`). Set it for the Production environment; redeploy after setting it since Vite bakes `VITE_*` vars in at build time, not runtime.
+4. Set the environment variable in the Vercel dashboard: `VITE_API_URL` = the Render backend's public URL + `/api/v1` (e.g. `https://your-service.onrender.com/api/v1`). Set it for the Production environment; redeploy after setting it since Vite bakes `VITE_*` vars in at build time, not runtime.
 
 **Branch protection** (manual, no `gh` CLI needed): GitHub repo → Settings → Branches → Add branch protection rule → branch name pattern `develop` → enable "Require status checks to pass before merging" → search for and select `build` (this repo's CI job name) → Save. This makes CI a real gate: a PR can't merge into `develop` (and therefore can't trigger a Vercel deploy) while format/lint/build are failing.
 
